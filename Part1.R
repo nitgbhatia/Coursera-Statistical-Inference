@@ -1,3 +1,4 @@
+
 ## ------------------------------------------------------------------------
 set.seed(3)
 lambda <- 0.2
@@ -41,3 +42,5 @@ coverage <- sapply(lambda_vals, function(lamb) {
 
 library(ggplot2)
 qplot(lambda_vals, coverage) + geom_hline(yintercept=0.95)
+
+
