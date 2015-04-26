@@ -1,3 +1,6 @@
+---
+output: pdf_document
+---
 # Statistical Inference Course Project, Part 1: Simulation Exercises
 
 
