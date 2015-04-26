@@ -1,12 +1,4 @@
----
-title: 'Statistical Inference Course Project, Part 1: Simulation Exercises'
-author: ""Nitika Gaiha Bhatia""
-output:
-  html_document: default
-  pdf_document:
-    fig_height: 4
----
-
+# Statistical Inference Course Project, Part 1: Simulation Exercises
 
 
 
@@ -30,6 +22,25 @@ row_means <- rowMeans(sim)
 
 The distribution of sample means is as follows.
 
+
+```r
+# plot the histogram of averages
+hist(row_means, breaks=50, prob=TRUE,
+     main="Distribution of averages of samples,
+     drawn from exponential distribution with lambda=0.2",
+     xlab="")
+# density of the averages of samples
+lines(density(row_means))
+# theoretical center of distribution
+abline(v=1/lambda, col="red")
+# theoretical density of the averages of samples
+xfit <- seq(min(row_means), max(row_means), length=100)
+yfit <- dnorm(xfit, mean=1/lambda, sd=(1/lambda/sqrt(sample_size)))
+lines(xfit, yfit, pch=22, col="red", lty=2)
+# add legend
+legend('topright', c("simulation", "theoretical"), lty=c(1,2), col=c("black", "red"))
+```
+
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
 
 The distribution of sample means is centered at 4.9866
@@ -43,20 +54,37 @@ distribution. The figure above also shows the density computed using the histogr
 normal density plotted with theoretical mean and variance values. Also, the
 q-q plot below suggests the normality.
 
+
+```r
+qqnorm(row_means); qqline(row_means)
+```
+
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
 Finally, let's evaluate the coverage of the confidence interval for
 $1/\lambda = \bar{X} \pm 1.96 \frac{S}{\sqrt{n}}$
 
+
+```r
+lambda_vals <- seq(4, 6, by=0.01)
+coverage <- sapply(lambda_vals, function(lamb) {
+    mu_hats <- rowMeans(matrix(rexp(sample_size*num_sim, rate=0.2),
+                               num_sim, sample_size))
+    ll <- mu_hats - qnorm(0.975) * sqrt(1/lambda**2/sample_size)
+    ul <- mu_hats + qnorm(0.975) * sqrt(1/lambda**2/sample_size)
+    mean(ll < lamb & ul > lamb)
+})
+
+library(ggplot2)
+qplot(lambda_vals, coverage) + geom_hline(yintercept=0.95)
+```
+
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
 
 The 95% confidence intervals for the rate parameter ($\lambda$) to be estimated
 ($\hat{\lambda}$) are
-$\hat{\lambda}_{low} = \hat{\lambda}(1 - \frac{1.96}{\sqrt{n}})$ and
+$\hat{\lambda}_{low} = \hat{\lambda}(1 - \frac{1.96}{\sqrt{n}})$ agnd
 $\hat{\lambda}_{upp} = \hat{\lambda}(1 + \frac{1.96}{\sqrt{n}})$.
 As can be seen from the plot above, for selection of $\hat{\lambda}$ around 5,
 the average of the sample mean falls within the confidence interval at least 95% of the time.
 Note that the true rate, $\lambda$ is 5.
-
-<!--
----
