@@ -2,9 +2,9 @@
 title: 'Statistical Inference Course Project, Part 1: Simulation Exercises'
 author: "Nitika Gaiha Bhatia"
 output:
+  html_document: default
   pdf_document:
     fig_height: 4
-  html_document: default
 ---
 
 
